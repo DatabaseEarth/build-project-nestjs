@@ -1,0 +1,6 @@
+npm install --save @nestjs/swagger
+npm install @nestjs/config dotenv
+npm i --save ioredis
+npm install @nestjs/cache-manager cache-manager-ioredis-yet ioredis
+npm install @nestjs/typeorm typeorm pg
+npm install @nestjs/typeorm typeorm mssql
