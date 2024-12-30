@@ -17,7 +17,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:run": "cross-env npm run typeorm migration:run -- -d ./src/system/database/data-source.ts",
+    "migration:generate": "cross-env npm run typeorm -- -d ./src/system/database/data-source.ts migration:generate ./src/databases/migrations/%npm_config_name%",
+    "migration:create": "cross-env npm run typeorm -- migration:create ./src/databases/migrations/%npm_config_name%",
+    "migration:revert": "cross-env npm run typeorm -- -d ./src/system/database/data-source.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/cache-manager": "^2.3.0",
@@ -40,7 +45,7 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
-    "typeorm": "^0.3.20"
+    "typeorm-extension": "^3.6.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -52,6 +57,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -61,8 +67,9 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.20",
     "typescript": "^5.1.3"
   },
   "jest": {

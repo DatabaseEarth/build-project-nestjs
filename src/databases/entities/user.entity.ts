@@ -4,13 +4,7 @@ import { CreatedUpdateEntity } from './abstracts';
 @Entity('users')
 @Unique(['email'])
 export class UserEntity extends CreatedUpdateEntity {
-  @Column({
-    name: 'id',
-    type: 'uniqueidentifier',
-    nullable: false,
-    primary: true,
-    default: () => 'newsequentialid()',
-  })
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ name: 'email', type: 'varchar', length: 255, nullable: false })

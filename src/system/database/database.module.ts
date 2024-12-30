@@ -13,7 +13,7 @@ import { join } from 'path';
         _redis_config: RedisConfig,
         _dbs_config: DbsConfig,
       ): Promise<TypeOrmModuleOptions> => ({
-        type: 'mssql',
+        type: 'postgres',
         host: _dbs_config.getHost(),
         port: _dbs_config.getPort(),
         username: _dbs_config.getUsername(),
@@ -28,9 +28,14 @@ import { join } from 'path';
         subscribers: [
           join(
             __dirname,
-            '../../database/subscribers/**/*.subscriber{.ts,.js}',
+            '../../databases/subscribers/**/*.subscriber{.ts,.js}',
           ),
         ],
+        ssl: !_dbs_config.getSsl()
+          ? undefined
+          : {
+              cert: _dbs_config.getSsl(),
+            },
         logging: !isProduction(),
         cache: {
           type: 'ioredis',
@@ -42,10 +47,11 @@ import { join } from 'path';
             db: 1,
           },
         },
-        options: {
-          encrypt: false,
-          connectTimeout: 30000,
-        },
+        // Cái này có khi sử dụng SQL Server
+        // options: {
+        //   encrypt: false,
+        //   connectTimeout: 30000,
+        // },
       }),
     }),
   ],

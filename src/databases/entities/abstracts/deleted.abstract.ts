@@ -22,7 +22,7 @@ export default abstract class DeletedEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'deleted_at',
     nullable: true,
     default: Date.now(),

@@ -14,7 +14,7 @@ export default abstract class UpdatedEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'updated_at',
     nullable: true,
     default: Date.now(),

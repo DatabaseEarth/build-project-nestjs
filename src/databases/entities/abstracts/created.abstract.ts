@@ -14,7 +14,7 @@ export default abstract class CreatedEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'created_at',
     nullable: true,
     default: Date.now(),

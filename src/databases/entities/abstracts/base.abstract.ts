@@ -14,7 +14,7 @@ export abstract class CreatedUpdateEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'created_at',
     nullable: true,
     default: Date.now(),
@@ -33,7 +33,7 @@ export abstract class CreatedUpdateEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'updated_at',
     nullable: true,
     default: Date.now(),
@@ -54,7 +54,7 @@ export abstract class CreatedUpdateDeletedEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'created_at',
     nullable: true,
     default: Date.now(),
@@ -73,7 +73,7 @@ export abstract class CreatedUpdateDeletedEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'updated_at',
     nullable: true,
     default: Date.now(),
@@ -100,7 +100,7 @@ export abstract class CreatedUpdateDeletedEntity {
 
   @Expose()
   @Column({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'deleted_at',
     nullable: true,
     default: Date.now(),
