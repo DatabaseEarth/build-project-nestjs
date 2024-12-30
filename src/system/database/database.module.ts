@@ -22,8 +22,9 @@ import { join } from 'path';
         autoLoadEntities: true,
         synchronize: false,
         entities: [
-          join(__dirname, '../../database/entities/**/*.entity{.ts,.js}'),
+          join(__dirname, '../../databases/entities/**/*.entity{.ts,.js}'),
         ],
+        // migrations: [__dirname, '../../databases/migrations/**/*.ts'],
         subscribers: [
           join(
             __dirname,

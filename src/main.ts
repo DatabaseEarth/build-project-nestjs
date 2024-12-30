@@ -6,12 +6,13 @@ import * as cookieParser from 'cookie-parser';
 import { AppConfig } from './config';
 import { LoggerService } from '@system/logger';
 import helmet from 'helmet';
-import { TypeORMExceptionFilter } from '@system/databases/exceptions';
+import { TypeORMExceptionFilter } from '@system/database/exceptions';
 import { ValidationPipe } from '@nestjs/common';
 import { ValidationException } from '@system/exceptions';
 import { ValidationError } from 'class-validator';
 import { createSwaggerDocument } from './swagger';
 import { isProduction } from '@utils/env';
+import 'reflect-metadata';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

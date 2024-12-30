@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { ConfigModule } from '@system/config';
 import { CacheModule } from '@system/cache';
 import { LoggerModule } from '@system/logger';
-import { DatabaseModule } from '@system/databases';
+import { DatabaseModule } from '@system/database';
 
 @Module({
   imports: [ConfigModule, CacheModule, LoggerModule, DatabaseModule],
