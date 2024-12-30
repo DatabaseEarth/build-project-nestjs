@@ -28,12 +28,18 @@
     "@nestjs/swagger": "^8.1.0",
     "@nestjs/typeorm": "^10.0.2",
     "cache-manager-ioredis-yet": "^2.1.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.7",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
+    "helmet": "^8.0.0",
     "ioredis": "^5.4.2",
     "mssql": "^10.0.4",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {

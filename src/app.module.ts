@@ -6,7 +6,7 @@ import { LoggerModule } from '@system/logger';
 import { DatabaseModule } from '@system/databases';
 
 @Module({
-  imports: [ConfigModule, CacheModule, LoggerModule], //, DatabaseModule
+  imports: [ConfigModule, CacheModule, LoggerModule, DatabaseModule],
   controllers: [AppController],
   providers: [],
 })
