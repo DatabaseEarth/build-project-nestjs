@@ -1,4 +1,4 @@
-import { Environment } from '@common/index';
+import { Environment } from '@common';
 
 export function isDevelopment(): boolean {
   return process.env.NODE_ENV === Environment.DEVELOPMENT;

@@ -12,7 +12,7 @@ npm install reflect-metadata
 npm install typeorm-extension
 npm install cross-env --save-dev
 npm install --save-dev typescript ts-node
-
+npm install bcrypt
 
 
 

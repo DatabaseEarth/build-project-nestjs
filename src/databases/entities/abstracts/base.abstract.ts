@@ -1,14 +1,13 @@
-import { Expose } from 'class-transformer';
-import { Column } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
+import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { UserEntity } from '../user.entity';
 
-export abstract class CreatedUpdateEntity {
+export abstract class CreatedUpdatedEntity {
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'created_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   created_by: string;
 
@@ -17,17 +16,15 @@ export abstract class CreatedUpdateEntity {
     type: 'timestamp',
     name: 'created_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   created_at: Date;
 
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'updated_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   updated_by: string;
 
@@ -36,19 +33,27 @@ export abstract class CreatedUpdateEntity {
     type: 'timestamp',
     name: 'updated_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'created_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_create: UserEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'updated_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_update: UserEntity;
 }
 
-export abstract class CreatedUpdateDeletedEntity {
+export abstract class CreatedUpdatedDeletedEntity {
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'created_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   created_by: string;
 
@@ -57,17 +62,15 @@ export abstract class CreatedUpdateDeletedEntity {
     type: 'timestamp',
     name: 'created_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   created_at: Date;
 
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'updated_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   updated_by: string;
 
@@ -76,13 +79,13 @@ export abstract class CreatedUpdateDeletedEntity {
     type: 'timestamp',
     name: 'updated_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
 
   @Expose()
   @Column({
-    type: 'tinyint',
+    type: 'smallint',
     name: 'deleted',
     default: 0,
   })
@@ -90,11 +93,9 @@ export abstract class CreatedUpdateDeletedEntity {
 
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'deleted_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   deleted_by: string;
 
@@ -103,7 +104,22 @@ export abstract class CreatedUpdateDeletedEntity {
     type: 'timestamp',
     name: 'deleted_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   deleted_at: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'created_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_create: UserEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'updated_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_update: UserEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'deleted_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_delete: UserEntity;
 }

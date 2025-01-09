@@ -1,10 +1,11 @@
-import { Expose } from 'class-transformer';
-import { Column } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
+import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { UserEntity } from '../user.entity';
 
 export default abstract class DeletedEntity {
   @Expose()
   @Column({
-    type: 'tinyint',
+    type: 'smallint',
     name: 'deleted',
     default: 0,
   })
@@ -12,11 +13,9 @@ export default abstract class DeletedEntity {
 
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'deleted_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   deleted_by: string;
 
@@ -25,7 +24,12 @@ export default abstract class DeletedEntity {
     type: 'timestamp',
     name: 'deleted_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   deleted_at: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'deleted_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_delete: UserEntity;
 }

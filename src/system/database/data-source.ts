@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SeederOptions } from 'typeorm-extension';
 
-import { Environment } from '@common/index';
+import { Environment } from '@common';
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ const options: DataSourceOptions & SeederOptions = {
   seeds: [join(__dirname, '../../databases/seeders/**/*{.ts,.js}')],
   factories: [join(__dirname, '../../databases/factories/**/*{.ts,.js}')],
   ssl: process.env.DB_SSL ? { cert: process.env.DB_SSL } : undefined,
-  // logging: process.env.NODE_ENV !== Environment.PRODUCTION,
+  logging: process.env.NODE_ENV !== Environment.PRODUCTION,
 };
 
 export default new DataSource(options);

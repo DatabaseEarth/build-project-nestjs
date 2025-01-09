@@ -1,14 +1,13 @@
-import { Expose } from 'class-transformer';
-import { Column } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
+import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { UserEntity } from '../user.entity';
 
 export default abstract class UpdatedEntity {
   @Expose()
   @Column({
-    type: 'varchar',
+    type: 'uuid',
     name: 'updated_by',
     nullable: true,
-    default: 'system',
-    length: 20,
   })
   updated_by: string;
 
@@ -17,7 +16,12 @@ export default abstract class UpdatedEntity {
     type: 'timestamp',
     name: 'updated_at',
     nullable: true,
-    default: Date.now(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.id)
+  @JoinColumn({ name: 'updated_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
+  @Exclude()
+  user_update: UserEntity;
 }
