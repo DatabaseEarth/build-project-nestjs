@@ -37,12 +37,12 @@ export abstract class CreatedUpdatedEntity {
   })
   updated_at: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'created_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_create: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updated_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_update: UserEntity;
@@ -104,21 +104,20 @@ export abstract class CreatedUpdatedDeletedEntity {
     type: 'timestamp',
     name: 'deleted_at',
     nullable: true,
-    default: () => 'CURRENT_TIMESTAMP',
   })
   deleted_at: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'created_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_create: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updated_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_update: UserEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'deleted_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_delete: UserEntity;

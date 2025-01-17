@@ -24,11 +24,10 @@ export default abstract class DeletedEntity {
     type: 'timestamp',
     name: 'deleted_at',
     nullable: true,
-    default: () => 'CURRENT_TIMESTAMP',
   })
   deleted_at: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'deleted_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_delete: UserEntity;

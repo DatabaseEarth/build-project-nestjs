@@ -14,13 +14,29 @@ export class BlackListEntity extends CreatedUpdatedEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ name: 'token', type: 'varchar', length: 255, nullable: false })
+  @Column({ name: 'token', type: 'text', nullable: false })
   token: string;
 
   @Column({ name: 'user_id', type: 'uuid', nullable: false })
   userId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @Column({
+    name: 'expires_at',
+    type: 'timestamp',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  expiresAt: Date;
+
+  @Column({
+    name: 'issued_at',
+    type: 'timestamp',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  issuedAt: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   @Exclude()
   user: UserEntity;

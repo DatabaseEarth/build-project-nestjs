@@ -14,7 +14,7 @@ export class AccessTokenEntity extends CreatedUpdatedEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ name: 'token', type: 'varchar', length: 255, nullable: false })
+  @Column({ name: 'token', type: 'text', nullable: false })
   token: string;
 
   @Column({ name: 'user_id', type: 'uuid', nullable: false })
@@ -26,9 +26,17 @@ export class AccessTokenEntity extends CreatedUpdatedEntity {
     nullable: true,
     default: () => 'CURRENT_TIMESTAMP',
   })
-  expiresAt: number;
+  expiresAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @Column({
+    name: 'issued_at',
+    type: 'timestamp',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  issuedAt: Date;
+
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user: UserEntity;

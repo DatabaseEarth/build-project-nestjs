@@ -20,7 +20,7 @@ export default abstract class UpdatedEntity {
   })
   updated_at: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'updated_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_update: UserEntity;

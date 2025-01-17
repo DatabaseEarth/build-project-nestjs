@@ -20,7 +20,7 @@ export default abstract class CreatedEntity {
   })
   created_at: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'created_by' }) // Cột trong bảng sẽ chứa ID của UserEntity
   @Exclude()
   user_create: UserEntity;
