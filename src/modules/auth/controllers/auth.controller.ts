@@ -19,13 +19,18 @@ import {
   ApiTags,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { SignUpData, SignUpResponse } from '../dtos/responses';
+import {
+  SignInData,
+  SignInResponse,
+  SignUpData,
+  SignUpResponse,
+} from '../dtos/responses';
 import { Response } from 'express';
 import { CurrentUser, RequiredAuth, SessionUser } from '../decorators';
 import { ISessionToken, IUserCurrent } from '../interfaces';
 
 @ApiTags('Authentication - Người dùng')
-@ApiExtraModels(SignUpData)
+@ApiExtraModels(SignUpData, SignInData)
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -49,29 +54,36 @@ export class AuthController {
   }
 
   @Post('sign-in')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Đăng nhập tài khoản người dùng' })
   @ApiBody({ description: 'Nội dung yêu cầu đăng nhập', type: SignInRequest })
-  @ApiResponse({
-    status: 204,
-    description: 'Đăng nhập thành công, trả về cookies',
-  })
+  @ApiDataResponse({ $ref: getSchemaPath(SignInData) })
   async login(
     @Body() signInRequest: SignInRequest,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { access_token, refresh_token } =
+    const { userData, SessionToken } =
       await this.auth_service.signIn(signInRequest);
 
-    response.cookie(this.auth_config.getAccessCookieName(), access_token, {
-      httpOnly: true,
-      maxAge: this.auth_config.getAccessExpires() * 1000,
-    });
+    response.cookie(
+      this.auth_config.getAccessCookieName(),
+      SessionToken.access_token,
+      {
+        httpOnly: true,
+        maxAge: this.auth_config.getAccessExpires() * 1000,
+      },
+    );
 
-    response.cookie(this.auth_config.getRefreshCookieName(), refresh_token, {
-      httpOnly: true,
-      maxAge: this.auth_config.getRefreshExpires() * 1000,
-    });
+    response.cookie(
+      this.auth_config.getRefreshCookieName(),
+      SessionToken.refresh_token,
+      {
+        httpOnly: true,
+        maxAge: this.auth_config.getRefreshExpires() * 1000,
+      },
+    );
+
+    return new SignInResponse(userData, 'Đăng nhập tài khoản thành công');
   }
 
   @Post('sign-out')

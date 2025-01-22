@@ -30,7 +30,7 @@ async function bootstrap() {
 
   // #region CONFIGURE APP
   app.enableCors({
-    origin: true,
+    origin: true, // 'http://localhost:5173'
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });

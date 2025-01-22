@@ -96,7 +96,23 @@ export class AuthService {
     await this._access_token_provider.save(access_token, user.id, secret);
     await this._refresh_token_provider.save(refresh_token, user.id, secret);
 
-    const result: ISessionToken = { access_token, refresh_token };
+    const SessionToken: ISessionToken = { access_token, refresh_token };
+
+    const userData: IUserCurrent = {
+      id: user.id,
+      fullname: user.fullname,
+      email: user.email,
+      avatar: user.avatar,
+      address: user.address,
+      mobile: user.mobile,
+      birthday: user.birthday,
+      role: user.role,
+      status: user.status,
+    };
+    const result = {
+      userData,
+      SessionToken,
+    };
     return result;
   }
 
