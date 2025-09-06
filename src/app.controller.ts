@@ -1,27 +1,13 @@
-import { AppConfig } from '@config/index';
-import { RedisConfig } from '@config/index';
+import { AppService } from '@/app.service';
 import { Controller, Get } from '@nestjs/common';
-import { CacheService } from '@system/cache';
 
 @Controller()
 export class AppController {
-  constructor(
-    protected readonly ConfigService: AppConfig,
-    protected readonly RedisService: RedisConfig,
-    protected readonly RedisServiceReal: CacheService,
-  ) {}
+  constructor(private readonly appService: AppService
+  ) { }
 
   @Get()
   async getHello() {
-    // const data = await this.RedisServiceReal.get('hi');
-    return {
-      host: this.ConfigService.getHost(),
-      port: this.ConfigService.getPort(),
-      //   apiDocument: this.appService.getApiDocument(),
-      redisHost: this.RedisService.getHost(),
-      redisPort: this.RedisService.getPort(),
-
-      // redisService: data,
-    };
+    return 'hehehe'
   }
 }

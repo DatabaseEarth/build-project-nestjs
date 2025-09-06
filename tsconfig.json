@@ -12,13 +12,9 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@*": ["./src/*"]
-      // "@config/*": ["./src/config/*"],
-      // "@common/*": ["./src/common/*"],
-      // "@databases/*": ["./src/databases/*"],
-      // "@modules/*": ["./src/modules/*"],
-      // "@system/*": ["./src/system/*"],
-      // "@utils/*": ["./src/utils/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "incremental": true,
     "skipLibCheck": true,
