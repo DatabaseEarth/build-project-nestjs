@@ -1,5 +1,6 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { DataMetaData, DataResponse } from '@/common/decorators';
 
 const config = new DocumentBuilder()
   .setTitle('NestJS API')
@@ -10,6 +11,7 @@ const config = new DocumentBuilder()
 export const createSwaggerDocument = (app: NestExpressApplication) => {
   const document = SwaggerModule.createDocument(app, config, {
     extraModels: [
+      DataResponse, DataMetaData
     ],
   });
 

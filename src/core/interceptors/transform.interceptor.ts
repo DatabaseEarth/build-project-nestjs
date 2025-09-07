@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/common/interfaces';
 import {
   CallHandler,
   ExecutionContext,
@@ -7,17 +8,19 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-export interface Response<T> {
-  data: T;
-}
-
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>> {
+  implements NestInterceptor<T, ApiResponse<T>> {
   intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
-  ): Observable<Response<T>> {
-    return next.handle().pipe(map((data) => ({ data })));
+  ): Observable<ApiResponse<T>> {
+    return next.handle().pipe(map(
+      (data: any) => ({
+        data: data.data ?? data,
+        message: data.message ?? 'Thành công!',
+        meta: data.meta ?? undefined
+      })
+    ));
   }
 }

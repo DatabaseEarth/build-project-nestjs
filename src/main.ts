@@ -7,6 +7,7 @@ import { createSwaggerDocument } from './swagger';
 import compression from 'compression';
 import { isProduction } from '@/common/utils/env';
 import 'reflect-metadata';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -16,6 +17,7 @@ async function bootstrap() {
       : ['log', 'error', 'warn', 'debug', 'verbose'],
   });
 
+  const configService = app.get(ConfigService);
   app.use(compression());
   app.enableCors({
     origin: true, // 'http://localhost:5173'
@@ -32,13 +34,14 @@ async function bootstrap() {
   );
   app.useBodyParser('json', { limit: '50mb' });
   app.useBodyParser('urlencoded', { extended: true, limit: '50mb' });
+  createSwaggerDocument(app);
 
   // TODO: viết Logger
 
-  createSwaggerDocument(app);
-
-  await app.listen(3000, '0.0.0.0', () => {
-    console.log(`Application listen in ${3000}`);
+  const port: number = configService.get<number>('app.port');
+  const host: string = configService.get<string>('app.host');
+  await app.listen(port, host, () => {
+    console.log(`Application listen in ${port}`);
   });
 }
 
