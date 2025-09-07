@@ -3,11 +3,11 @@ import { ApiResponse, MetaData } from '@/common/interfaces';
 
 export const formatResponse = {
     single<T>(
-        dto: new (...args: any[]) => T,
-        data: any,
+        dto: (new (...args: any[]) => T) | null,
+        data: any = null,
         message = 'Thành công',
-    ): ApiResponse<T> {
-        const transformedData = plainToInstance(dto, data);
+    ): ApiResponse<T | null> {
+        const transformedData = dto && data ? plainToInstance(dto, data) : null;
         return {
             data: transformedData,
             message,
@@ -29,9 +29,9 @@ export const formatResponse = {
     paginate<T>(
         dto: new (...args: any[]) => T,
         data: any[],
+        message = 'Thành công',
         page: number,
         size: number,
-        message = 'Thành công',
     ): ApiResponse<T[]> {
         const transformedData = plainToInstance(dto, data);
         const totalItems = data.length;

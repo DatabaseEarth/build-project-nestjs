@@ -32,7 +32,7 @@ export class DataMetaData implements MetaData {
 
 export class DataResponse<T> implements ApiResponse<T> {
     @ApiProperty({ description: 'Dữ liệu phản hồi' })
-    data: T | T[];
+    data: T | T[] | null;
 
     @ApiProperty({
         description: 'Thông báo liên quan đến phản hồi',
@@ -40,27 +40,52 @@ export class DataResponse<T> implements ApiResponse<T> {
     })
     message: string;
 
-    constructor(data: T | T[], message?: string) {
-        this.data = data;
+    constructor(data?: T | T[] | null, message?: string) {
+        this.data = data ?? null;
         this.message = message || 'Thành công!';
     }
+}
+
+export function getSwaggerSchema(type: any, isArray = false): SchemaObject | ReferenceObject {
+    let schema: SchemaObject | ReferenceObject;
+
+    switch (true) {
+        case !type:
+            schema = { nullable: true, default: null };
+            break;
+        case type === String:
+            schema = { type: 'string' };
+            break;
+        case type === Number:
+            schema = { type: 'number' };
+            break;
+        case type === Boolean:
+            schema = { type: 'boolean' };
+            break;
+        case !!(type as any).enum:
+            schema = { enum: (type as any).enum };
+            break;
+        default:
+            schema = { $ref: getSchemaPath(type) } as ReferenceObject;
+    }
+
+    if (isArray)
+        schema = { type: 'array', items: schema };
+
+    return schema;
 }
 
 type ApiDataResponseOptions =
     | { isArray: true; withMeta?: boolean }
     | { isArray?: false; withMeta?: false };
-export const ApiDataResponse = <Data extends Type<unknown>>(
-    data: Data,
+export const ApiDataResponse = <Data extends Type<unknown> | null = null>(
+    data?: Data,
     options?: ApiDataResponseOptions,
     additionProp?: Record<string, SchemaObject | ReferenceObject>,
 ) => {
     const responseClass = DataResponse;
-
-    const properties: Record<string, any> = {
-        data: options?.isArray
-            ? { type: 'array', items: { $ref: getSchemaPath(data) } }
-            : { $ref: getSchemaPath(data) },
-    };
+    const properties: Record<string, any> = {};
+    properties.data = getSwaggerSchema(data, options?.isArray);
 
     if (options?.withMeta)
         properties.meta = { $ref: getSchemaPath(DataMetaData) };

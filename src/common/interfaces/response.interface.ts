@@ -7,7 +7,7 @@ export interface MetaData {
 }
 
 export interface ApiResponse<T> {
-    data: T | T[];
+    data: T | T[] | null;
     message?: string;
     meta?: MetaData;
 }
