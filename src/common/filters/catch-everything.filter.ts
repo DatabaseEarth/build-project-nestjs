@@ -1,35 +1,50 @@
-
 import {
-    ExceptionFilter,
-    Catch,
-    ArgumentsHost,
-    HttpException,
-    HttpStatus,
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { ApiErrorResponse } from '../interfaces';
 
 @Catch()
 export class CatchEverythingFilter implements ExceptionFilter {
-    constructor(private readonly httpAdapterHost: HttpAdapterHost) { }
+  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-    catch(exception: unknown, host: ArgumentsHost): void {
-        // In certain situations `httpAdapter` might not be available in the
-        // constructor method, thus we should resolve it here.
-        const { httpAdapter } = this.httpAdapterHost;
+  catch(exception: unknown, host: ArgumentsHost): void {
+    const { httpAdapter } = this.httpAdapterHost;
+    const ctx = host.switchToHttp();
 
-        const ctx = host.switchToHttp();
+    let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message = 'Internal server error';
+    let error_code = 'INTERNAL_SERVER_ERROR';
+    let details: any = undefined;
 
-        const httpStatus =
-            exception instanceof HttpException
-                ? exception.getStatus()
-                : HttpStatus.INTERNAL_SERVER_ERROR;
+    if (exception instanceof HttpException) {
+      httpStatus = exception.getStatus();
+      const response = exception.getResponse();
 
-        const responseBody = {
-            statusCode: httpStatus,
-            timestamp: new Date().toISOString(),
-            path: httpAdapter.getRequestUrl(ctx.getRequest()),
-        };
-
-        httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+      if (typeof response === 'string') {
+        message = response;
+        details = exception.stack;
+      } else if (typeof response === 'object' && response !== null) {
+        message = response['message'] || message;
+        error_code = response['error'] || error_code;
+        details = response['details'] || response['errors'] || undefined;
+      }
+    } else if (exception instanceof Error) {
+      message = exception.message;
+      details = exception.stack;
     }
+
+    const responseBody: ApiErrorResponse = {
+      status: 'error',
+      message,
+      error_code,
+      details,
+    };
+
+    httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+  }
 }

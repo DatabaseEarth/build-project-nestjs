@@ -3,7 +3,12 @@ import { AppController } from './app.controller';
 import { modules } from './modules';
 import { AppService } from '@/app.service';
 import { ConfigModule } from '@nestjs/config';
-import { appConfig, configuration, databaseConfig, validationSchema } from '@/configuration';
+import {
+  appConfig,
+  configuration,
+  databaseConfig,
+  validationSchema,
+} from '@/configuration';
 import { infrastructure } from './infrastructure';
 import { CoreModule } from './core';
 
@@ -11,9 +16,7 @@ import { CoreModule } from './core';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: [
-        '.env',
-      ],
+      envFilePath: ['.env'],
       load: [configuration, appConfig, databaseConfig],
       validationSchema: validationSchema,
       expandVariables: true,
@@ -26,4 +29,4 @@ import { CoreModule } from './core';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

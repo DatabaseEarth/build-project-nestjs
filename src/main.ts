@@ -8,6 +8,7 @@ import compression from 'compression';
 import { isProduction } from '@/common/utils/env';
 import 'reflect-metadata';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -18,6 +19,8 @@ async function bootstrap() {
   });
 
   const configService = app.get(ConfigService);
+  const loggerService = app.get(Logger);
+  app.useLogger(app.get(Logger));
   app.use(compression());
   app.enableCors({
     origin: true, // 'http://localhost:5173'
@@ -36,12 +39,10 @@ async function bootstrap() {
   app.useBodyParser('urlencoded', { extended: true, limit: '50mb' });
   createSwaggerDocument(app);
 
-  // TODO: viết Logger
-
   const port: number = configService.get<number>('app.port');
   const host: string = configService.get<string>('app.host');
   await app.listen(port, host, () => {
-    console.log(`Application listen in ${port}`);
+    loggerService.log(`Application listen in ${port}`);
   });
 }
 

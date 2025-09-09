@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, ValidationError } from '@nestjs/common';
+import { ApiErrorResponse } from '../interfaces/response.interface';
 
 export interface IValidationErrors {
   [field: string]: string[];
@@ -13,13 +14,10 @@ const buildValidationErrors = (
       ? `${parentProperty}.${err.property}`
       : err.property;
 
-    if (err.constraints) {
-      acc[propertyPath] = Object.values(err.constraints);
-    }
+    if (err.constraints) acc[propertyPath] = Object.values(err.constraints);
 
-    if (err.children && err.children.length > 0) {
+    if (err.children && err.children.length > 0)
       Object.assign(acc, buildValidationErrors(err.children, propertyPath));
-    }
 
     return acc;
   }, {});
@@ -29,13 +27,13 @@ export class ValidationException extends HttpException {
   constructor(errors: ValidationError[]) {
     const formattedErrors = buildValidationErrors(errors);
 
-    super(
-      {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Validation failed',
-        errors: formattedErrors,
-      },
-      HttpStatus.BAD_REQUEST,
-    );
+    const response: ApiErrorResponse = {
+      status: 'error',
+      message: 'Validation failed',
+      error_code: 'VALIDATION_ERROR',
+      details: formattedErrors,
+    };
+
+    super(response, HttpStatus.BAD_REQUEST);
   }
 }
