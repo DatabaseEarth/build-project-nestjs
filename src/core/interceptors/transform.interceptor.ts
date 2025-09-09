@@ -17,16 +17,34 @@ export class TransformInterceptor<T>
     next: CallHandler<T>,
   ): Observable<ApiResponse<T>> {
     return next.handle().pipe(
-      map((data: any) => ({
-        status: 'success' as const,
-        message: data.message ?? 'Thành công!',
-        data: data.data ?? data,
-        meta: data.meta ?? undefined,
-      })),
-      catchError((err) => {
-        // console.error('Error in TransformInterceptor:', err);
-        return throwError(() => err);
+      map((data: any) => {
+        // Nếu data đã null, trả thẳng để tránh nested object
+        if (data === null) {
+          return {
+            status: 'success' as const,
+            message: 'Thành công!',
+            data: null,
+          };
+        }
+
+        // Nếu data có định dạng ApiResponse (single, array, paginate)
+        if (data.data !== undefined || data.meta !== undefined) {
+          return {
+            status: 'success' as const,
+            message: data.message ?? 'Thành công!',
+            data: data.data ?? null,
+            meta: data.meta ?? undefined,
+          };
+        }
+
+        // Trường hợp khác: trả trực tiếp
+        return {
+          status: 'success' as const,
+          message: data.message ?? 'Thành công!',
+          data,
+        };
       }),
+      catchError((err) => throwError(() => err)),
     );
   }
 }
