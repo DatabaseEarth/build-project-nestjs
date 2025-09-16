@@ -4,6 +4,8 @@ export interface PayloadToken {
   fullName: string;
   phone: string;
   sessionId?: string | null;
+  iat?: number;
+  exp?: number;
   // ... :))
 }
 

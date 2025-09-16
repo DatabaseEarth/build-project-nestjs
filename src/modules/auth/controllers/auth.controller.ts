@@ -15,13 +15,15 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { Public } from '../decorators';
 
 @ApiTags('Authentication')
 @ApiExtraModels(LoginResponseDto)
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
+  @Public()
   @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Đăng ký tài khoản' })
@@ -37,6 +39,7 @@ export class AuthController {
     return formatResponse.single(null, null, 'Đăng ký tài khoản thành công!');
   }
 
+  @Public()
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Đăng nhập tài khoản' })
@@ -56,6 +59,7 @@ export class AuthController {
     );
   }
 
+  @Public()
   @Post('/log-out')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Đăng xuất tài khoản' })
@@ -69,5 +73,21 @@ export class AuthController {
   ): Promise<ApiResponse<null>> {
     await this.authService.logOut(logoutRequest);
     return formatResponse.single(null, null, 'Đăng xuất tài khoản thành công!');
+  }
+
+  @Public()
+  @Post('/refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Cấp lại mã Token' })
+  @ApiBody({
+    description: 'Dữ liệu yêu cầu',
+    type: LoginRequestDto,
+  })
+  @ApiDataResponse(LoginResponseDto)
+  async refresh(
+    @Body() refreshRequest: LogoutRequestDto,
+  ): Promise<ApiResponse<LoginResponseDto>> {
+    const data = await this.authService.refresh(refreshRequest);
+    return formatResponse.single(LoginResponseDto, data, 'Cấp lại mã xác thực thành công!');
   }
 }

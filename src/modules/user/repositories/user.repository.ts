@@ -16,7 +16,7 @@ export class UserRepository {
     fullName?: string;
   }): Promise<UserEntity | null> {
     if (!filter.id && !filter.email)
-      throw new Error('Either id or email must be provided');
+      throw new Error('Phải có id hoặc email');
 
     const where: Record<string, any> = {};
     if (filter.id) where.id = filter.id;
