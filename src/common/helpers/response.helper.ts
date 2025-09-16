@@ -1,4 +1,4 @@
-import { plainToInstance } from 'class-transformer';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { ApiResponse, MetaData } from '@/common/interfaces';
 
 export const formatResponse = {
@@ -7,11 +7,16 @@ export const formatResponse = {
     data: any = null,
     message = 'Thành công',
   ): ApiResponse<T | null> {
-    const transformedData = dto && data ? plainToInstance(dto, data) : null;
+    const transformedData =
+      dto && data
+        ? plainToInstance(dto, data, {
+            excludeExtraneousValues: true,
+          })
+        : null;
     return {
       status: 'success',
       message,
-      data: transformedData,
+      data: instanceToPlain(transformedData) as T,
     };
   },
 
@@ -20,11 +25,13 @@ export const formatResponse = {
     data: any[],
     message = 'Thành công',
   ): ApiResponse<T[]> {
-    const transformedData = plainToInstance(dto, data);
+    const transformedData = plainToInstance(dto, data, {
+      excludeExtraneousValues: true,
+    });
     return {
       status: 'success',
       message,
-      data: transformedData,
+      data: instanceToPlain(transformedData) as T[],
     };
   },
 
@@ -35,7 +42,9 @@ export const formatResponse = {
     page: number,
     size: number,
   ): ApiResponse<T[]> {
-    const transformedData = plainToInstance(dto, data);
+    const transformedData = plainToInstance(dto, data, {
+      excludeExtraneousValues: true,
+    });
     const totalItems = data.length;
 
     const meta: MetaData = {
@@ -48,7 +57,7 @@ export const formatResponse = {
 
     return {
       status: 'success',
-      data: transformedData,
+      data: instanceToPlain(transformedData) as T[],
       message,
       meta,
     };
